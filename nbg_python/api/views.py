@@ -1,11 +1,9 @@
 import os
 import sys
 
-from rest_framework import viewsets
+from rest_framework import status
+from rest_framework import views
 from rest_framework.response import Response
-
-from api import serializers
-
 
 sys.path.append(
     os.path.join(os.getcwd(), os.pardir)
@@ -15,27 +13,28 @@ sys.path.append(
 import nbg
 
 
-class ResourceViewSet(viewsets.ModelViewSet):
-    serializer_class = serializers.ResourceSerializer
-    queryset = None
+class ProxyView(views.APIView):
+    def post(self, request, *args, **kwargs):
+        return Response(
+            nbg.create_resource(data=request.data).text.strip(u'\u0000'),
+            status=status.HTTP_201_CREATED)
 
-    def list(self, response):
-        return Response([])
+    def put(self, request, *args, **kwargs):
+        return Response(
+            nbg.modify_resource(data=request.data).text.strip(u'\u0000'))
 
-    def retrieve(self, response):
-        return Response([])
+    def get(self, request, *args, **kwargs):
+        if 'cached' in request.GET:
+            query = request.GET.copy()
+            query.pop('cached')
+            return Response(
+                nbg.retrieve_resource_cached(data=query).text.strip(u'\u0000'))
+        return Response(
+            nbg.retrieve_resource(data=request.GET).text.strip(u'\u0000'))
 
-    def retrieve_cached(self, response):
-        return Response([])
+    def head(self, request, *args, **kwargs):
+        return Response({}, headers=nbg.retrieve_resource_headers(data={}))
 
-    def head(self, response):
-        return Response([])
-
-    def create(self, response):
-        return Response([])
-
-    def modify(self, response):
-        return Response([])
-
-    def remove(self, response):
-        return Response([])
+    def delete(self, request, *args, **kwargs):
+        return Response(nbg.remove_resource(data={}).text.strip(u'\u0000'),
+                        status=status.HTTP_204_NO_CONTENT)
