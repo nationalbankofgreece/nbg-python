@@ -1,6 +1,7 @@
 import os
 import sys
 
+from django.shortcuts import render
 from rest_framework import status
 from rest_framework import views
 from rest_framework.response import Response
@@ -38,3 +39,7 @@ class ProxyView(views.APIView):
     def delete(self, request, *args, **kwargs):
         return Response(nbg.remove_resource(data={}).text.strip(u'\u0000'),
                         status=status.HTTP_204_NO_CONTENT)
+
+
+def ui_view(request):
+    return render(request, 'api/index.html')
