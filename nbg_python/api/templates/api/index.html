@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>NBG Python API UI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/fetch/0.11.0/fetch.min.js"></script>
+    <script tupe="text/javascript"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>NBG API UI</h1>
+        <form id="request-form">
+			<div class="form-group">
+                <label for="method">API method</label>
+                <select class="form-control" id="method">
+                	<option value="get">Retrieve resource</option>
+                	<option value="get-cached">Retrieve resource (cached)</option>
+                	<option value="post">Create resource</option>
+                	<option value="put">Modify resource</option>
+                	<option value="delete">Remove resource</option>
+                	<option value="head">Retrieve resource headers</option>
+                </select>
+			</div>
+            <div class="form-group">
+                <label for="request-body">Request body</label>
+                <textarea id="request-body" class="form-control" autofocus ></textarea>
+            </div>
+            <button id="submit" type="button" class="btn btn-primary">Submit request</button>
+        </form>
+    </div>
+    <script>
+    	var form = document.getElementById('request-form'),
+            submitButton = document.getElementById('submit'),
+            apiPath = '/api';
+
+        submitButton.onclick = function (e) {
+            submitButton.disabled = 'disabled';
+            submitButton.textContent = 'Submitting';
+
+            var method = document.getElementById('method').value,
+                requestBodyValue = document.getElementById('request-body').value || '{}',
+                data = JSON.parse(requestBodyValue);
+
+            if (method == 'get-cached') {
+                method = 'get';
+                data.cached = true;
+            }
+
+            var url = apiPath,
+				requestBody = (method == 'get') ? null : JSON.stringify(data);
+
+            if (method == 'get') {
+                url += '?';
+                for (var key in data) {
+                    if (url != "") {
+                        url += "&";
+                    }
+                    url += key + "=" + encodeURIComponent(data[key]);
+                }
+            }
+
+            fetch(url, {
+                method: method,
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: requestBody
+            }).then(function(response) {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Submit request';
+            })
+        }
+    </script>
+</body>
+</html>
