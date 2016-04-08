@@ -1,4 +1,3 @@
-import json
 import os
 
 import dotenv
@@ -22,49 +21,29 @@ DEFAULT_HEADERS = {
 
 
 def create_resource(data={}):
-    body = data
-
-    if isinstance(body, dict):
-        body = json.dumps(body)
-
     response = requests.post(
-        NBG_RESOURCE_URL, headers=DEFAULT_HEADERS, data=body
+        NBG_RESOURCE_URL, headers=DEFAULT_HEADERS, json=data
     )
     return response
 
 
 def modify_resource(data={}):
-    body = data
-
-    if isinstance(body, dict):
-        body = json.dumps(body)
-
     response = requests.put(
-        NBG_RESOURCE_URL, headers=DEFAULT_HEADERS, data=body
+        NBG_RESOURCE_URL, headers=DEFAULT_HEADERS, json=data
     )
     return response
 
 
 def remove_resource(data={}):
-    body = data
-
-    if isinstance(body, dict):
-        body = json.dumps(body)
-
     response = requests.delete(
-        NBG_RESOURCE_URL, headers=DEFAULT_HEADERS, data=body
+        NBG_RESOURCE_URL, headers=DEFAULT_HEADERS, json=data
     )
     return response
 
 
 def retrieve_resource_headers(data={}):
-    body = data
-
-    if isinstance(body, dict):
-        body = json.dumps(body)
-
     response = requests.head(
-        NBG_RESOURCE_URL, headers=DEFAULT_HEADERS, data=body
+        NBG_RESOURCE_URL, headers=DEFAULT_HEADERS, json=data
     )
     return response
 

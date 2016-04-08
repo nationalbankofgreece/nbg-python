@@ -66,7 +66,7 @@ response = nbg.retrieve_resource_headers(data)
 
 ```python
 data = {
-    'param1': 'sample'
+    'param1': 'sample',
     'param2': '{number}'
 }
 response = nbg.retrieve_resource(data)
@@ -76,7 +76,7 @@ response = nbg.retrieve_resource(data)
 
 ```python
 data = {
-    'param1': 'sample'
+    'param1': 'sample',
     'param2': '{number}'
 }
 response = nbg.retrieve_resource_cached(data)
